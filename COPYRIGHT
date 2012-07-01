@@ -1,0 +1,17 @@
+A considerable portion of the initial check-in of ArcanOS is based directly
+off the operating systems coursework labs of Dr. Lorenzo Alvisi
+(http://userweb.cs.utexas.edu/~lorenzo/), and I owe him a debt of gratitude for
+producing and distributing material to help bridge the gap between a simple
+"Hello World" bootloader and a functioning kernel.  I believe Dr. Alvisi has
+released his code under an MIT license, which is GPL compatible.
+
+Some materials from the initial drop contain header files documented as under
+a BSD license which may not be fully GPL-compatible.  Since the conflicting
+clause under this license is related to advertising of products, I believe
+that a hobby project such as ArcanOS will not produce any conflict.  I am
+endeavoring to locate more GPL-compatible source for these files.
+
+Concerned parties should contact me at roadriverrail@gmail.com
+
+Unless explicity specified otherwise, materials in this project are copyright
+J. Rhett Aultman (c) 2010 and are released under the terms of the GPL v3.
