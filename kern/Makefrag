@@ -56,11 +56,5 @@ $(OBJDIR)/kern/kernel: $(KERN_OBJFILES) $(KERN_BINFILES) kern/kernel.ld
 	$(V)$(OBJDUMP) -S $@ > $@.asm
 	$(V)$(NM) -n $@ > $@.sym
 
-# How to build the Bochs disk image
-$(OBJDIR)/kern/bochs.img: $(OBJDIR)/kern/kernel
-	@echo + mk $@
-	kern/layout_image_file.py
-	$(V)cat boot/stage1 boot/stage2 boot/pad $(OBJDIR)/kern/kernel boot/post_pad > $(OBJDIR)/kern/bochs.img	
-
-all: $(OBJDIR)/kern/bochs.img
+all: $(OBJDIR)/kern/kernel
 

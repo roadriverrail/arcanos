@@ -9,14 +9,6 @@ OBJDIR := obj
 
 TOP = .
 
-# Cross-compiler jos toolchain
-#
-# This Makefile will automatically use the cross-compiler toolchain
-# installed as 'i386-jos-elf-*', if one exists.  If the host tools ('gcc',
-# 'objdump', and so forth) compile for a 32-bit x86 ELF target, that will
-# be detected as well.  If you have the right compiler toolchain installed
-# using a different name, set GCCPREFIX explicitly in conf/env.mk
-
 # try to infer the correct GCCPREFIX
 ifndef GCCPREFIX
 GCCPREFIX := $(shell if objdump -i 2>&1 | grep 'elf32-i386' >/dev/null 2>&1; \
@@ -77,6 +69,10 @@ IMAGES = $(OBJDIR)/kern/bochs.img
 # For deleting the build
 clean:
 	rm -rf $(OBJDIR)
+
+# Auto-copy to boot disk image
+load: all
+	./tools/copy_to_image.sh
 
 always:
 	@:
