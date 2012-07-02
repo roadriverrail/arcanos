@@ -1,0 +1,6 @@
+default 0
+timeout 10
+
+title=ArcanOS
+root (hd0,0)
+kernel /kernel
