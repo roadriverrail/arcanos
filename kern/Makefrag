@@ -15,7 +15,8 @@ KERN_SRCFILES :=	kern/entry.S \
 					kern/interrupts/interrupts.S \
 					kern/interrupts/interrupt_handlers.c \
 					kern/interrupts/idt.c \
-					kern/interrupts/pic.c
+					kern/interrupts/pic.c \
+					kern/devices/atapio.c
 
 # Only build files if they exist.
 KERN_SRCFILES := $(wildcard $(KERN_SRCFILES))

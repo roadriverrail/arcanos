@@ -13,6 +13,7 @@
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 extern void keyboard_isr();
+extern void atapio_init();
 void i386_init(multiboot_info_t* mbi);
 
 void kernel_main( void* mbd, unsigned int magic )
@@ -139,8 +140,9 @@ i386_init(multiboot_info_t* mbi)
 	//keyboard ISR to perhaps...process any lingering key presses?
 	asm("int $33");
 	memmgr_init();
-	
-	char* yaay = memmgr_allocate(1024);
+
+	_kern_print("Initializing ATAPIO driver\n");
+	atapio_init();
 //stop here for now
 	_kern_print("Entering kernel idle loop.\n");
 	asm("hlt");
