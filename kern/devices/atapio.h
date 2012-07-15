@@ -52,8 +52,8 @@ uint16_t base_port;
 #define SELECT_MASTER_DRIVE 0xA0
 #define SELECT_SLAVE_DRIVE 0xB0
 
-#define RW_MASTER_DRIVE 0xE0
-#define RW_SLAVE_DRIVE 0xF0
-
 #define COMMAND_READ_SECTORS 0x20
 #define COMMAND_IDENTIFY 0xEC
+
+void atapio_init();
+void atapio_read(uint32_t sector, uint32_t sector_count, uint16_t *buffer);

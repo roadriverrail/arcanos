@@ -13,7 +13,7 @@
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 extern void keyboard_isr();
-extern void atapio_init();
+extern void load_partitions();
 void i386_init(multiboot_info_t* mbi);
 
 void kernel_main( void* mbd, unsigned int magic )
@@ -142,7 +142,7 @@ i386_init(multiboot_info_t* mbi)
 	memmgr_init();
 
 	_kern_print("Initializing ATAPIO driver\n");
-	atapio_init();
+	load_partitions();
 //stop here for now
 	_kern_print("Entering kernel idle loop.\n");
 	asm("hlt");

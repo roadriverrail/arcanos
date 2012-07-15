@@ -2,8 +2,10 @@
 #include <inc/x86.h>
 #include <inc/stringformat.h>
 
+#define RW_DRIVE (0xE0 | slave_bit << 4)
+
 static uint8_t drive_attached = 0;
-static uint8_t current_drive = 0;
+static uint8_t slave_bit = 0;
 
 void atapio_init()
 {
@@ -32,7 +34,7 @@ void atapio_init()
   // disc and let it go
 
   outb(ATA_DEVCONTROL, SELECT_MASTER_DRIVE);
-
+  slave_bit = 0;
   // Drives may need up to 500ns for drive select to
   // complete, and an IO read is about 100ns, so burn
   // 400ns.
@@ -45,7 +47,6 @@ void atapio_init()
   uint8_t cl=inb(ATA_LBAMID_PORT);	/* get the "signature bytes" */
   uint8_t ch=inb(ATA_LBAHI_PORT);
 
-  _kern_print("Read signature bytes %x and %x\n", cl, ch);
   /* differentiate ATA, ATAPI, SATA and SATAPI */
   if (cl==0x14 && ch==0xEB) 
   {
@@ -70,9 +71,9 @@ void atapio_init()
   
 }
 
-void atapio_read(uint32_t sector, uint32_t sector_count, char *buffer)
+void atapio_read(uint32_t sector, uint32_t sector_count, uint16_t *buffer)
 {
-/*
+/* Comment of how to read from http://wiki.osdev.org/ATA_PIO_Mode
 An example of a 28 bit LBA PIO mode read on the Primary bus:
 Send 0xE0 for the "master" or 0xF0 for the "slave", ORed with the highest 4 bits of the LBA to port 0x1F6: outb(0x1F6, 0xE0 | (slavebit << 4) | ((LBA >> 24) & 0x0F))
 Send a NULL byte to port 0x1F1, if you like (it is ignored and wastes lots of CPU time): outb(0x1F1, 0x00)
@@ -86,5 +87,32 @@ Transfer 256 words, a word at a time, into your buffer from I/O port 0x1F0. (In 
 Then loop back to waiting for the next IRQ (or poll again -- see next note) for each successive sector.
 */
 
+  outb(ATA_DRIVE_HEAD_PORT, RW_DRIVE | ((sector >> 24) & 0x0F));
+  outb(ATA_FEATURES_ERR_INFO_PORT, 0x00);
+  outb(ATA_SECTOR_COUNT_PORT, sector_count);
+  outb(ATA_LBALOW_PORT, (uint8_t) sector);
+  outb(ATA_LBAMID_PORT, (uint8_t)(sector >> 8));
+  outb(ATA_LBAHI_PORT, (uint8_t)(sector >> 16));
+  outb(ATA_COMMAND_STATUS_PORT, COMMAND_READ_SECTORS);
 
+  while (1)
+  {
+    if ((inb(ATA_COMMAND_STATUS_PORT) & STATUS_BSY) == 0)
+    {
+      break;
+    }
+  }
+  
+  if ((inb(ATA_COMMAND_STATUS_PORT) & STATUS_DRQ) != 0)
+  {
+    for (int i=0; i < 255; i++)
+    {
+      buffer[i] = inw(ATA_DATA_PORT);
+    }
+  } else if ((inb(ATA_COMMAND_STATUS_PORT) & STATUS_ERR) != 0)
+  {
+    _kern_print("Failed to read disk base port: %x slave %x sector %d", base_port, slave_bit, sector);
+  }
+
+  return;
 }
