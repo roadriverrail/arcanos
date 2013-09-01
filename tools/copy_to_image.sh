@@ -8,3 +8,7 @@ else
     sudo mount /dev/loop2 mnt
 fi
     cp -v obj/kern/kernel mnt/kernel
+    sync
+    sudo umount /dev/loop2 
+    sudo losetup -d /dev/loop2
+    sudo losetup -d /dev/loop1
