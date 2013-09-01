@@ -1,6 +1,6 @@
 OBJDIRS += kern
 
-KERN_LDFLAGS := $(LDFLAGS) -T kern/kernel.ld -nostdlib
+KERN_LDFLAGS := $(LDFLAGS) -T kern/kernel.ld -melf_i386 -nostdlib
 
 # entry.S must be first, so that it's the first code in the text segment!!!
 #
