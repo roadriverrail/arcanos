@@ -26,6 +26,8 @@ IDT* phys_idtp;
 #define HIGH_OFFSET(x) ((x >> 16))
 #define LOW_OFFSET(x) ((x & 0x0000FFFF)) 
 
+#define SYSCALL_IRQ 0x80
+
 void reset_idt();
 void set_idt_entry(uint8_t number, void (*handler)(), uint16_t type);
 void load_idt();

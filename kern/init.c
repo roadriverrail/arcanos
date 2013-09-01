@@ -13,6 +13,7 @@
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 extern void keyboard_isr();
+extern void syscall_isr();
 extern void load_partitions();
 void i386_init(multiboot_info_t* mbi);
 
@@ -133,6 +134,7 @@ i386_init(multiboot_info_t* mbi)
 	PIC_remap(32, 40); //PIC1 - 32-39, PIC2 - 40-47;
 	set_idt_entry(33, keyboard_isr, INTERRUPT_GATE_TYPE_ATTR);
 	PIC_set_mask(1, 0);
+	set_idt_entry(SYSCALL_IRQ, syscall_isr, INTERRUPT_GATE_TYPE_ATTR);
 	load_idt();
 	asm("sti"); //Interrupts are on now, bitches.
 	_kern_print("Interrupts enabled.\n");

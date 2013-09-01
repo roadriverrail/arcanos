@@ -186,6 +186,13 @@ isr_30:
     popal
     iret
 
+.globl syscall_isr
+syscall_isr:
+	pushal
+	call _syscall_interrupt
+	popal
+	iret
+
 .globl keyboard_isr
 keyboard_isr:
 	pushal

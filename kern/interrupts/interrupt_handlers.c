@@ -75,6 +75,11 @@ void _interrupt_handler(uint8_t number)
 	while(1);
 }
 
+void _syscall_interrupt()
+{
+    _kern_print("System call interrupt has been called\n");
+}
+
 void _keyboard_interrupt()
 {
     uint8_t new_scan_code=0;
