@@ -1,0 +1,33 @@
+OBJDIRS += usr/lib 
+
+USRLIB_LDFLAGS := $(LDFLAGS) -melf_i386 -nostdlib
+
+USRLIB_SRCFILES :=	usr/lib/syscall.c \
+                        usr/lib/entry.S \
+
+# Only build files if they exist.
+USRLIB_SRCFILES := $(wildcard $(USRLIB_SRCFILES))
+
+USRLIB_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(USRLIB_SRCFILES))
+USRLIB_OBJFILES := $(patsubst %.S, $(OBJDIR)/%.o, $(USRLIB_OBJFILES))
+
+# How to build usrlib object files
+$(OBJDIR)/usr/lib/%.o: usr/lib/%.c
+	@echo + cc $<
+	@mkdir -p $(@D)
+	$(V)$(CC) -nostdinc $(USER_CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/usr/lib/%.o: usr/lib/%.S
+	@echo + as $<
+	@mkdir -p $(@D)
+	$(V)$(CC) -nostdinc $(USER_CFLAGS) -c -o $@ $<
+
+# How to build the usrlib itself
+$(OBJDIR)/usr/lib/libusrlib.a: $(USRLIB_OBJFILES)
+	@echo + ld $@
+	$(V)$(AR) rcs  $@ $(USRLIB_OBJFILES)
+	$(V)$(OBJDUMP) -S $@ > $@.asm
+	$(V)$(NM) -n $@ > $@.sym
+
+all: $(OBJDIR)/usr/lib/libusrlib.a
+

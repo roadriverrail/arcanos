@@ -1,0 +1,32 @@
+OBJDIRS += usr/app 
+
+USRAPP_LIBFLAGS := -L obj/usr/lib -l usrlib
+
+USRAPP_SRCFILES :=	usr/app/try_syscall.c \
+
+# Only build files if they exist.
+USRAPP_SRCFILES := $(wildcard $(USRAPP_SRCFILES))
+
+USRAPP_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(USRAPP_SRCFILES))
+USRAPP_OBJFILES := $(patsubst %.S, $(OBJDIR)/%.o, $(USRAPP_OBJFILES))
+
+# How to build app object files
+$(OBJDIR)/usr/app/%.o: usr/app/%.c
+	@echo + cc $<
+	@mkdir -p $(@D)
+	$(V)$(CC) -nostdinc $(USER_CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/usr/app/%.o: usr/app/%.S
+	@echo + as $<
+	@mkdir -p $(@D)
+	$(V)$(CC) -nostdinc $(USER_CFLAGS) -c -o $@ $<
+
+# How to build the app itself
+$(OBJDIR)/usr/app/try_syscall: $(USRAPP_OBJFILES)
+	@echo + cc $@
+	$(V)$(CC) $(USER_CFLAGS) -o $@ $(USRAPP_OBJFILES) $(USRAPP_LIBFLAGS)
+	$(V)$(OBJDUMP) -S $@ > $@.asm
+	$(V)$(NM) -n $@ > $@.sym
+
+all: $(OBJDIR)/usr/app/try_syscall
+

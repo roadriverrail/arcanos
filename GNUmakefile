@@ -36,7 +36,7 @@ PERL	:= perl
 # Compiler flags
 # -fno-builtin is required to avoid refs to undefined functions in the kernel.
 # Only optimize to -O1 to discourage inlining, which complicates backtraces.
-CFLAGS	:= $(CFLAGS) $(DEFS) $(LABDEFS) -O -fno-builtin -I$(TOP) -MD -Wall -Wno-format -Wno-unused -Werror -gstabs -fno-stack-protector -std=gnu99 -m32
+CFLAGS	:= $(CFLAGS) $(DEFS) $(LABDEFS) -O -fno-builtin -I$(TOP) -MD -Wall -Wno-format -Wno-unused -Werror -gstabs -fno-stack-protector -std=gnu99 -m32 -nostdlib
 
 # Lists that the */Makefrag makefile fragments will add to
 OBJDIRS :=
@@ -55,14 +55,15 @@ all:
 	$(OBJDIR)/lib/%.o $(OBJDIR)/fs/%.o $(OBJDIR)/user/%.o
 
 KERN_CFLAGS := $(CFLAGS) -DARCANOS_KERNEL -gstabs
-USER_CFLAGS := $(CFLAGS) -DARCANOS_USER -gstabs
+USER_CFLAGS := $(CFLAGS) -I usr/inc -DARCANOS_USER -gstabs
 
 
 
 
 # Include Makefrags for subdirectories
 include kern/Makefrag
-
+include usr/lib/Makefrag
+include usr/app/Makefrag
 
 IMAGES = $(OBJDIR)/kern/bochs.img
 
