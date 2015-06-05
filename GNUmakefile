@@ -57,9 +57,6 @@ all:
 KERN_CFLAGS := $(CFLAGS) -DARCANOS_KERNEL -gstabs
 USER_CFLAGS := $(CFLAGS) -I usr/inc -DARCANOS_USER -gstabs
 
-
-
-
 # Include Makefrags for subdirectories
 include kern/Makefrag
 include usr/lib/Makefrag
@@ -73,10 +70,11 @@ clean:
 
 # Auto-copy to boot disk image
 load: all
+	mkdir -p mnt
 	./tools/copy_to_image.sh
 
 always:
 	@:
 
 .PHONY: all always \
-	clean 
+	clean
