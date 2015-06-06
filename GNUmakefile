@@ -73,6 +73,10 @@ load: all
 	mkdir -p mnt
 	./tools/copy_to_image.sh
 
+EMULATOR=bochs
+run: all
+	$(EMULATOR)
+
 always:
 	@:
 
