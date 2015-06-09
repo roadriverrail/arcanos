@@ -75,7 +75,7 @@ load: all
 
 EMULATOR=bochs
 run: all
-	$(EMULATOR)
+	$(EMULATOR) -q
 
 always:
 	@:
