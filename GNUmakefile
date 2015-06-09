@@ -31,7 +31,6 @@ NM	:= $(GCCPREFIX)nm
 # Native commands
 NCC	:= gcc $(CC_VER) -pipe
 TAR	:= gtar
-PERL	:= perl
 
 # Compiler flags
 # -fno-builtin is required to avoid refs to undefined functions in the kernel.
