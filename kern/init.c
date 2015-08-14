@@ -15,6 +15,7 @@
 extern void keyboard_isr();
 extern void syscall_isr();
 extern void load_partitions();
+void display_kernel_logo(void);
 void i386_init(multiboot_info_t* mbi);
 
 void kernel_main( void* mbd, unsigned int magic )
@@ -29,6 +30,14 @@ void kernel_main( void* mbd, unsigned int magic )
    }
 	mbd = KERNBASE + mbd;
 	i386_init((multiboot_info_t*)mbd);
+}
+
+void
+display_kernel_logo()
+{
+    _kern_print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    _kern_print("~~~~Welcome to ARCAN-OS~~~~~\n");
+    _kern_print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 }
 
 void
@@ -47,6 +56,7 @@ i386_init(multiboot_info_t* mbi)
 	int j;
 
 	console_init();
+    display_kernel_logo();
 	_kern_print("Arcanos version %s\n", ARCANOS_VERSION);
 	_kern_print("Kernel mapped to address 0x%x\n", KERNBASE);
 
